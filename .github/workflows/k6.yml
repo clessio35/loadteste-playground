@@ -14,16 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install k6
+      - name: Install k6 manually (v0.49.0)
         run: |
           sudo apt-get update && sudo apt-get install -y curl unzip
-          curl -s https://api.github.com/repos/grafana/k6/releases/latest \
-            | grep browser_download_url \
-            | grep linux-amd64.zip \
-            | cut -d '"' -f 4 \
-            | wget -qi -
-          unzip k6-v*-linux-amd64.zip
-          sudo mv k6-v*-linux-amd64/k6 /usr/local/bin/
+          wget https://github.com/grafana/k6/releases/download/v0.49.0/k6-v0.49.0-linux-amd64.zip
+          unzip k6-v0.49.0-linux-amd64.zip
+          sudo mv k6-v0.49.0-linux-amd64/k6 /usr/local/bin/
           k6 version
 
       - name: Run load test
