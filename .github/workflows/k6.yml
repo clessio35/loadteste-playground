@@ -1,18 +1,30 @@
-image: ubuntu:22.04
+name: Run k6 Load Test
 
-stages:
-  - test
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
-load_test:
-  stage: test
-  before_script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl -s https://api.github.com/repos/grafana/k6/releases/latest |
-        grep browser_download_url |
-        grep linux-amd64 |
-        cut -d '"' -f 4 |
-        wget -qi -
-    - unzip k6-v*-linux-amd64.zip
-    - mv k6-v*-linux-amd64/k6 /usr/local/bin/k6
-  script:
-    - k6 run tests/load.js
+jobs:
+  k6-test:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install k6
+        run: |
+          sudo apt-get update && sudo apt-get install -y curl unzip
+          curl -s https://api.github.com/repos/grafana/k6/releases/latest \
+            | grep browser_download_url \
+            | grep linux-amd64.zip \
+            | cut -d '"' -f 4 \
+            | wget -qi -
+          unzip k6-v*-linux-amd64.zip
+          sudo mv k6-v*-linux-amd64/k6 /usr/local/bin/
+          k6 version
+
+      - name: Run load test
+        run: k6 run tests/load.js
