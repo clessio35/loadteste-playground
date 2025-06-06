@@ -5,5 +5,5 @@ load_test:
   stage: test
   image: grafana/k6
   script:
-    - ls -la tests
+    - cd tests
     - k6 run tests/load.js

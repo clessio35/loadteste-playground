@@ -2,22 +2,12 @@ jobs:
   load_test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y curl unzip
-
-      - name: Download latest k6 release
+      - name: Install k6 CLI
         run: |
-          K6_LATEST_URL=$(curl -s https://api.github.com/repos/grafana/k6/releases/latest \
-            | grep browser_download_url \
-            | grep linux-amd64.zip \
-            | cut -d '"' -f 4)
-          echo "Downloading $K6_LATEST_URL"
-          curl -L $K6_LATEST_URL -o k6.zip
-          unzip k6.zip
-          sudo mv k6-v*/k6 /usr/local/bin/k6
+          curl -s https://packagecloud.io/install/repositories/grafana/stable/script.deb.sh | sudo bash
+          sudo apt-get install -y k6
 
       - name: Run k6 load test
         run: k6 run tests/load.js
