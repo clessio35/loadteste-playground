@@ -5,9 +5,6 @@ load_test:
   stage: test
   image: grafana/k6
   script:
-    - echo "Listando raiz do projeto:"
     - ls -la
-    - echo "Listando pasta tests:"
     - ls -la tests
-    - echo "Rodando k6:"
     - k6 run tests/load.js
