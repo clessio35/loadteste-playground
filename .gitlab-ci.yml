@@ -1,8 +1,8 @@
 stages:
   - test
 
-performance_test:
+load_test:
   stage: test
-  image: loadimpact/k6
+  image: grafana/k6 
   script:
     - k6 run tests/load.js
